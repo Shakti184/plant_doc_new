@@ -125,66 +125,69 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
         
         
         
-        body: Column(
-      
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.indigo, width: 5),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(100),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Color.fromARGB(255, 23, 253, 153), width: 5),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Container(
+                          child: pickedImage != null
+                              ? Image.file(
+                                  pickedImage!,
+                                  width: 200,
+                                  height: 500,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.network(
+                                  'https://mcdn.wallpapersafari.com/medium/3/88/9tOhN2.jpg',
+                                  width: 570,
+                                  height: 270,
+                                  fit: BoxFit.scaleDown,
+                                ),
+                        ),
                       ),
-                    ),
-                    child: ClipOval(
-                      child: pickedImage != null
-                          ? Image.file(
-                              pickedImage!,
-                              width: 170,
-                              height: 170,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              'https://mcdn.wallpapersafari.com/medium/3/88/9tOhN2.jpg',
-                              width: 170,
-                              height: 170,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 5,
-                    child: IconButton(
+                      Positioned(
+                        bottom: 0,
+                        right: 5,
+                        child: IconButton(
+                          onPressed: imagePickerOption,
+                          icon: const Icon(
+                            Icons.add_a_photo_outlined,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ), 
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton.icon(
                       onPressed: imagePickerOption,
-                      icon: const Icon(
-                        Icons.add_a_photo_outlined,
-                        color: Colors.blue,
-                        size: 30,
-                      ),
-                    ),
-                  )
-                ],
-              ), 
+                      icon: const Icon(Icons.add_a_photo_sharp),
+                      label: const Text('UPLOAD IMAGE')),
+                )
+              ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton.icon(
-                  onPressed: imagePickerOption,
-                  icon: const Icon(Icons.add_a_photo_sharp),
-                  label: const Text('UPLOAD IMAGE')),
-            )
-          ],
+          ),
         ),
       ),
     );
