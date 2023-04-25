@@ -82,7 +82,6 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
       setState(() {
         pickedImage = tempImage;
       });
-
       Get.back();
     } catch (error) {
       debugPrint(error.toString());
@@ -94,10 +93,9 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
-          title: Image.asset('assets/plant_doc.png',fit: BoxFit.cover,),
+          title: Image.asset('assets/plant_doc.png',fit: BoxFit.scaleDown,),
           centerTitle: true,
           backgroundColor: Colors.white,
         ),
@@ -109,7 +107,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context){return Container();}));
           },
-          child: const Icon(Icons.add_a_photo),
+          child: const Icon(Icons.chat_bubble),
         ),
           
 
@@ -117,7 +115,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
 
 
         bottomNavigationBar: BottomAppBar(
-          color: Colors.lightGreenAccent,
+          color: Color.fromARGB(255, 3, 125, 48),
           child: Container(height: 50.0,),
         ),
     
@@ -125,71 +123,66 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
         
         
         
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Color.fromARGB(255, 23, 253, 153), width: 5),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Container(
-                          child: pickedImage != null
-                              ? Image.file(
-                                  pickedImage!,
-                                  width: 200,
-                                  height: 500,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.network(
-                                  'https://mcdn.wallpapersafari.com/medium/3/88/9tOhN2.jpg',
-                                  width: 570,
-                                  height: 270,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 5,
-                        child: IconButton(
-                          onPressed: imagePickerOption,
-                          icon: const Icon(
-                            Icons.add_a_photo_outlined,
-                            color: Colors.blue,
-                            size: 30,
+        body: SingleChildScrollView(
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.indigo, width: 5),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Card(
+                      child: pickedImage != null
+                          ? Image.file(
+                              pickedImage!,
+                              width: 570,
+                              height: 270,
+                              fit: BoxFit.scaleDown,
+                            )
+                          : Image.network(
+                              'https://mcdn.wallpapersafari.com/medium/3/88/9tOhN2.jpg',
+                              width: 570,
+                              height: 270,
+                              fit: BoxFit.scaleDown,
+                            ),
+                    ),
+                  ),
+                        Positioned(
+                          bottom: 0,
+                          right: 5,
+                          child: IconButton(
+                            onPressed: imagePickerOption,
+                            icon: const Icon(
+                              Icons.add_a_photo_outlined,
+                              color: Colors.blue,
+                              size: 30,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ), 
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton.icon(
-                      onPressed: imagePickerOption,
-                      icon: const Icon(Icons.add_a_photo_sharp),
-                      label: const Text('UPLOAD IMAGE')),
-                )
-              ],
-            ),
-          ),
+                      ],
+                    ), 
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton.icon(
+                        onPressed: imagePickerOption,
+                        icon: const Icon(Icons.add_a_photo_sharp),
+                        label: const Text('UPLOAD IMAGE')),
+                  )
+                ],
         ),
-      ),
+      )
     );
   }
 }
