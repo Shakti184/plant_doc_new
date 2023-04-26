@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:plant_doc/image_picker.dart';
+import 'package:tflite/tflite.dart';
+
 
 class Dashboard_screen extends StatefulWidget {
   const Dashboard_screen({super.key});
@@ -179,6 +180,16 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                         onPressed: imagePickerOption,
                         icon: const Icon(Icons.add_a_photo_sharp),
                         label: const Text('UPLOAD IMAGE')),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton.icon(
+                        onPressed: ,
+                        icon: const Icon(Icons.data_thresholding),
+                        label: const Text('Run Test')),
                   )
                 ],
         ),
