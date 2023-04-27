@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
 
+
+// ignore: camel_case_types
 class Dashboard_screen extends StatefulWidget {
   const Dashboard_screen({super.key});
 
@@ -13,10 +15,24 @@ class Dashboard_screen extends StatefulWidget {
   State<Dashboard_screen> createState() => _Dashboard_screenState();
 }
 
+// ignore: camel_case_types
 class _Dashboard_screenState extends State<Dashboard_screen> {
   
   File? pickedImage;
+  List? _outputs;
+  bool _loading=false;
 
+  @override
+  void initState() {
+    super.initState();
+    _loading=true;
+    loadModel().then((value){
+      setState(() {
+        _loading=false;
+      });
+    });
+  }
+ 
 
   void imagePickerOption() {
     Get.bottomSheet(
@@ -75,6 +91,45 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
     );
   }
 
+  void showResult() {
+    Get.bottomSheet(
+      SingleChildScrollView(
+        child: Column(          
+          children:<Widget>[ 
+            Container(
+            color: Colors.white,
+            height: 500,
+      
+            child: Padding(
+              
+              padding: const EdgeInsets.all(8.0),
+              child: _loading?Container(
+                    alignment: Alignment.center,
+                    child: const CircularProgressIndicator(),
+                  ):SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        pickedImage==null?Container():Image.file(pickedImage!,fit:BoxFit.scaleDown,),
+                        const SizedBox(height: 20,),
+                        
+                        _outputs!=null?Text("${_outputs![0]["label"]}",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          background: Paint()..color=Colors.white,
+                        ),
+                        ):Container(),
+                      ],
+                    ),
+                  ),
+            ),
+          ),
+          ],
+        ),
+      ),
+    );
+  }
+
   pickImage(ImageSource imageType) async {
     try {
       final photo = await ImagePicker().pickImage(source: imageType);
@@ -116,7 +171,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
 
 
         bottomNavigationBar: BottomAppBar(
-          color: Color.fromARGB(255, 3, 125, 48),
+          color: const Color.fromARGB(255, 3, 125, 48),
           child: Container(height: 50.0,),
         ),
     
@@ -184,16 +239,63 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                   const SizedBox(
                     height: 20,
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton.icon(
-                        onPressed: ,
+                        onPressed: processing_start,
                         icon: const Icon(Icons.data_thresholding),
                         label: const Text('Run Test')),
-                  )
+                  ),
                 ],
         ),
       )
     );
+  }
+  // ignore: non_constant_identifier_names
+  processing_start()async{
+    try {
+      final photo = pickedImage;
+      if (photo == null) return;
+      final tempImage = File(photo.path);
+      
+      setState(() {
+        pickedImage = tempImage;
+        _loading=true;
+      });
+      classifyImage(tempImage);
+      Get.back();
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+  classifyImage(File image)async{
+    var output=await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 2,
+      threshold: 0.5,
+      imageMean: 127.5,
+      imageStd: 127.5,
+      );
+      setState(() {
+        _loading=false;
+        _outputs=output;
+      });
+      
+      setState(() {
+        showResult();
+      });
+  }
+
+  loadModel()async{
+    await Tflite.loadModel(
+      model: "assets/tflite_model.tflite",
+      labels: "assets/label.txt",
+    );
+  }
+  @override
+  void dispose() {
+    Tflite.close();
+    super.dispose();
   }
 }
