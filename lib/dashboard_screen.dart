@@ -29,6 +29,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       });
     });
   }
+  
   loadModel()async{
     Tflite.close();
     await Tflite.loadModel(
@@ -36,6 +37,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       labels: 'assets/labels.txt',
     );
   }
+  
   @override
   void dispose() {
     Tflite.close();
@@ -100,51 +102,94 @@ class _DashboardscreenState extends State<Dashboardscreen> {
   }
 
   void showResult() {
-    Get.bottomSheet(
-      SingleChildScrollView(
-        child: Column(          
-          children:<Widget>[ 
-            Container(
-            color: Colors.white,
-            height: 500,
-      
-            child: Padding(
-              
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: [
-                  (_loading)?Container(
-                    margin: const EdgeInsets.all(10),
-                    child: Image.file(pickedImage!),
-                  ):Container(
-                    margin: const EdgeInsets.all(10),
-                    child: const Opacity(opacity: 0.8,
-                    child: Center(
-                      child: Text("No Image selected"),
-                    ),),
-                  ),
-                  SingleChildScrollView(
-                    child: Column(
-                      children: _loading?_outputs!.map((output){
-                        return Card(
-                          child: Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Text("${_outputs![0].toString()}-${output['confidence'].toStringAsFixed(2)}",
-                              style:const TextStyle(
-                                color: Colors.red,
-                                fontSize: 20,
-                              ),
+    Get.to(
+      Center(
+        child: SingleChildScrollView(
+          // physics: const BouncingScrollPhysics(decelerationRate:ScrollDecelerationRate.fast),
+          scrollDirection: Axis.vertical,
+          child:
+            Center(
+              child: Column(          
+                children:<Widget>[ 
+                  
+                  Container(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  height: 600,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView(
+                      children: [
+                        (_loading)?Card(
+                          // margin: const EdgeInsets.all(10),
+                          elevation: 8,
+                          shadowColor: const Color.fromARGB(255, 0, 136, 255),
+                          child: Image.file(pickedImage!),
+                        ):const Card(
+                          elevation: 15,
+                          shadowColor: Color.fromARGB(255, 0, 136, 255),
+                          margin: EdgeInsets.all(10),
+                          child: Opacity(opacity: 0.8,
+                          child: Center(
+                            child: Text("No Image selected"),
+                          ),),
+                        ),
+                        const SizedBox(height: 10,),
+                        SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(decelerationRate:ScrollDecelerationRate.normal),
+                          child: Column(
+                             children:
+                           (_loading)?_outputs!.map((output){
+                            return Column(
+                              children: [
+                                Card(
+                                  elevation: 8,
+                                  shadowColor: const Color.fromARGB(255, 0, 136, 255),
+                                  child: Container(
+                                    width: 250,
+                                    // height: 200,
+                                    margin: const EdgeInsets.all(10),
+                                    child: Text("Confidence : ${output['confidence'].toStringAsFixed(5)}",
+                                        style:const TextStyle(
+                                          color: Color.fromARGB(255, 134, 24, 16),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  const Padding(padding:EdgeInsets.all(10)),
+                                  Card(
+                                  elevation: 8,
+                                  shadowColor: const Color.fromARGB(255, 0, 136, 255),
+                                  child: Container(
+                                    width: 250,
+                                    // height: 200,
+                                    margin: const EdgeInsets.all(10),
+                                    child: Text("Label : ${output['label']}",
+                                        style:const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                            },
+                          ).toList():[],
                             ),
-                          ),
-                        );
-                      }).toList():[],
-                      ),
-                  )
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 ],
               ),
             ),
-          ),
-          ],
+          // ],
         ),
       ),
     );
@@ -174,6 +219,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       debugPrint(error.toString());
     }
   }
+  
   classifyImage(File photo)async{
     var output=await Tflite.runModelOnImage(
       path: photo.path,
@@ -204,16 +250,17 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     }
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       
         appBar: AppBar(
-          title: const Text('Plant Doc',style: TextStyle(fontSize:35,color:Color.fromARGB(255, 54, 182, 58),fontWeight:FontWeight.bold ),),
+          title: const Text('Plant Doc',style: TextStyle(fontSize:35,color:Color.fromARGB(255, 255, 255, 255),fontWeight:FontWeight.w900,fontStyle: FontStyle.italic),),
           centerTitle: true,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blue,
         ),
+
+        drawer: const NavigationDrawer(),
 
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 0, 21, 11),
@@ -223,20 +270,20 @@ class _DashboardscreenState extends State<Dashboardscreen> {
               MaterialPageRoute(
                 builder: (context){
                   return const Card(
-                    color: Color.fromARGB(255, 128, 252, 143),
+                    color: Colors.blue,
                     child: Center(
-                      child: Text('Chat bot will be added soon',style: TextStyle(fontSize: 30,fontWeight: FontWeight.w900),),
+                      child: Text('Chat bot will be added soon',style: TextStyle(fontSize: 30,fontWeight: FontWeight.w900,fontStyle: FontStyle.italic,color:Colors.white,),),
                     ),
                   );
                 },
               ),
             );
           },
-          child: const Icon(Icons.chat_bubble_rounded,size: 35,color: Color.fromARGB(255, 184, 209, 248),),
+          child: const Icon(Icons.chat_bubble_rounded,size: 25,color: Color.fromARGB(255, 255, 255, 255),),
         ),
           
         bottomNavigationBar: BottomAppBar(
-          color: const Color.fromARGB(255, 3, 125, 48),
+          color:Colors.blue,
           child: Container(height: 50.0,),
         ),
     
@@ -317,3 +364,67 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     );
   }
 }
+
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      shadowColor: Colors.blueAccent,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            buildHeader(context),
+            buildMenuItem(context),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  buildHeader(BuildContext context) =>Container(
+    padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top,
+    ),
+  );
+  buildMenuItem(BuildContext context)=>Container(
+    padding: const EdgeInsets.all(25),
+    child: Wrap(
+      children: [
+        ListTile(
+          leading: const Icon(Icons.home),
+          title: const Text('Home'),
+          onTap: (){},
+        ),
+        ListTile(
+          leading: const Icon(Icons.notifications),
+          title: const Text('Menu'),
+          onTap: (){},
+        ),
+        const Divider(color: Colors.black,),
+        ListTile(
+          leading: const Icon(Icons.update),
+          title: const Text('Update'),
+          onTap: (){},
+        ),
+        ListTile(
+          leading: const Icon(Icons.favorite),
+          title: const Text('Favourites'),
+          onTap: (){},
+        ),
+        ListTile(
+          leading: const Icon(Icons.menu_open_outlined),
+          title: const Text('Menu'),
+          onTap: (){},
+        ),
+        ListTile(
+          leading: const Icon(Icons.menu_open_outlined),
+          title: const Text('Menu'),
+          onTap: (){},
+        ),
+      ],
+    ),
+  );
+}
+

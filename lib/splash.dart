@@ -31,11 +31,13 @@ class _SplashState extends State<Splash> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        persistentFooterAlignment: AlignmentDirectional.center,
         body: Container(
-          color: Colors.green,
+          color: Color.fromARGB(255, 3, 158, 8),
           child: const Center(child: Text('Plant Doc.',style: TextStyle(
-            fontSize: 35,
-            fontWeight: FontWeight.w800,
+            fontSize: 45,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.w900,
             color: Colors.white,
           ),)),
         ),
